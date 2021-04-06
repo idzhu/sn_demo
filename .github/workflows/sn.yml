@@ -20,20 +20,20 @@ jobs:
     # trigger if the feature branch has been merged to master after a successfully 
     # completed pull request, hence the conditional for push to master. In other words,
     # the first two jobs run on CI, then all three jobs run on CD. 
-    name: Deploy to Prod
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
-    steps:
+        name: Deploy to Prod
+        runs-on: ubuntu-latest
+        if: ${{ github.event_name == 'push' }}
     
-        name: ServiceNow CI/CD Install App
-        id: install_app_prod
-        uses: ServiceNow/sncicd-install-app@1.0.0
-        with:
-          version: ${{ needs.test.outputs.publishversion }}
-        env:
-          snowUsername: ${{ secrets.SN_USERNAME }}
-          snowPassword: ${{ secrets.SN_PASSWORD }}
-          snowInstallInstance: ${{ secrets.SN_PROD_INSTANCE }}
-          appSysID: ${{ secrets.SN_APP_SYSID }}
+        steps:
+            - name: ServiceNow CI/CD Install App
+              id: install_app_prod
+              uses: ServiceNow/sncicd-install-app@1.0.0
+              with:
+                version: ${{ needs.test.outputs.publishversion }}
+              env:
+                snowUsername: ${{ secrets.SN_USERNAME }}
+                snowPassword: ${{ secrets.SN_PASSWORD }}
+                snowInstallInstance: ${{ secrets.SN_PROD_INSTANCE }}
+                appSysID: ${{ secrets.SN_APP_SYSID }}
 
           
