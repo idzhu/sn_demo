@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: SN
 
 # Controls when the action will run.
 on:
@@ -27,7 +27,7 @@ jobs:
 
             - name: Publish Application 
                 id: sncicd-publish-app # id of the step
-                uses: ServiceNow/sncicd-publish-app@1.0 # like username/repo-name
+                uses: ServiceNow/sncicd-publish-app@1.2 # like username/repo-name
                 with:
                     devNotes: "DevNotes-1"
                 env:
@@ -39,7 +39,7 @@ jobs:
 
             - name: Install Application
                 id: sncicd-install-app # id of the step
-                uses: ServiceNow/sncicd-install-app # like username/repo-name
+                uses: ServiceNow/sncicd-install-app@1.0.0 # like username/repo-name
                 with:
                     version: ${{steps.publish_app.outputs.newVersion}}
                 env:
