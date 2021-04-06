@@ -1,0 +1,50 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run.
+on:
+    # Triggers the workflow on push or pull request events but only for the master branch
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+    # This workflow contains a single job called "build"
+    build:
+        # The type of runner that the job will run on
+        runs-on: ubuntu-latest
+
+        # Steps represent a sequence of tasks that will be executed as part of the job
+        steps:
+            # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+            - uses: actions/checkout@v2
+
+            - name: Publish Application 
+                id: sncicd-publish-app # id of the step
+                uses: ServiceNow/sncicd-publish-app@1.0 # like username/repo-name
+                with:
+                    devNotes: "DevNotes-1"
+                env:
+                    snowUsername: ${{ secrets.SNOW_USERNAME }}
+                    snowPassword: ${{ secrets.SNOW_PASSWORD }}
+                    snowSourceInstance: ${{ secrets.SNOW_SOURCE_INSTANCE }}
+                    appSysID: ${{ secrets.APP_SYS_ID }}
+                    appScope: ${{ secrets.APP_SCOPE }}
+
+            - name: Install Application
+                id: sncicd-install-app # id of the step
+                uses: ServiceNow/sncicd-install-app # like username/repo-name
+                with:
+                    version: ${{steps.publish_app.outputs.newVersion}}
+                env:
+                    snowUsername: ${{ secrets.SNOW_USERNAME }}
+                    snowPassword: ${{ secrets.SNOW_PASSWORD }}
+                    snowInstallInstance: ${{ secrets.SNOW_INSTALL_INSTANCE }}
+                    appSysID: ${{ secrets.APP_SYS_ID }}
+                    appScope: ${{ secrets.APP_SCOPE }}
