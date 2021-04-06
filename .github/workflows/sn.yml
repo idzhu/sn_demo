@@ -25,7 +25,7 @@ jobs:
     if: ${{ github.event_name == 'push' }}
     steps:
     
-      - name: ServiceNow CI/CD Install App
+        name: ServiceNow CI/CD Install App
         id: install_app_prod
         uses: ServiceNow/sncicd-install-app@1.0.0
         with:
