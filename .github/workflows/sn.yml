@@ -15,6 +15,35 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+    build:
+        # Purpose of this job is to Apply Remote Changes for the branch triggering 
+        # the pipeline build to the Dev instance, then publish the application to 
+        # app repo using the template versioning format. 
+        name: Publish from Dev
+        runs-on: ubuntu-latest
+
+        # Below line can be used to set conditionals for modifying your pipeline as needed.
+        # if: ${{ github.event_name == 'pull_request'}}
+        steps:
+        - name: ServiceNow CI/CD Publish App
+          id: publish_app
+          uses: ServiceNow/sncicd-publish-app@1.0.0
+          with:
+            versionTemplate: 1.1
+            versionFormat: template
+          env:
+            snowUsername: ${{ secrets.SN_USERNAME }}
+            snowPassword: ${{ secrets.SN_PASSWORD }}
+            snowSourceInstance: ${{ secrets.SN_INSTANCE }}
+            appSysID: ${{ secrets.SN_APP_SYSID }}
+            appScope: ${{ secrets.SN_APP_SCOPE }}
+            # This is required to pass the version number output from Publish App 
+            # to the input for Install App in the next job! This is because the jobs 
+            # run on different Linux instances, so without this Install App won't know
+            # what to install.
+        outputs:
+            publishversion: ${{ steps.publish_app.outputs.newVersion }}
+
     deployprod:
     # Purpose of this job is to Install App to a Prod instance. This should only 
     # trigger if the feature branch has been merged to master after a successfully 
@@ -29,11 +58,15 @@ jobs:
               id: install_app_prod
               uses: ServiceNow/sncicd-install-app@1.0.0
               with:
-                version: ${{ needs.test.outputs.publishversion }}
+                version: ${{ needs.build.outputs.publishversion }}
               env:
                 snowUsername: ${{ secrets.SN_USERNAME }}
                 snowPassword: ${{ secrets.SN_PASSWORD }}
-                snowInstallInstance: ${{ secrets.SN_PROD_INSTANCE }}
+                snowInstallInstance: ${{ secrets.SN_INSTANCE }}
                 appSysID: ${{ secrets.SN_APP_SYSID }}
+                appScope: ${{ secrets.SN_APP_SCOPE }}
 
+            
+
+    
           
