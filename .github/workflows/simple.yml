@@ -34,3 +34,16 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      - name: Show secrets
+        env:
+            snowUsername: ${{ secrets.SN_USERNAME }}
+            snowPassword: ${{ secrets.SN_PASSWORD }}
+            snowSourceInstance: ${{ secrets.SN_INSTANCE }}
+            appSysID: ${{ secrets.SN_APP_SYSID }}
+            appScope: ${{ secrets.SN_APP_SCOPE }}
+            scrt: ${{ secrets }}
+        run: |
+            echo $snowUsername
+            echo $snowPassword
+            echo $scrt
