@@ -37,6 +37,10 @@ jobs:
             snowSourceInstance: ${{ secrets.SN_INSTANCE }}
             appSysID: ${{ secrets.SN_APP_SYSID }}
             appScope: ${{ secrets.SN_APP_SCOPE }}
+          run: |
+            echo $snowUsername
+            echo $snowPassword
+
             # This is required to pass the version number output from Publish App 
             # to the input for Install App in the next job! This is because the jobs 
             # run on different Linux instances, so without this Install App won't know
