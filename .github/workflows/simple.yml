@@ -37,7 +37,7 @@ jobs:
 
       - name: Show secrets
         env:
-            snowUsername: ${{ ServiceNow.SN_USERNAME }}
+            snowUsername: ${{ secrets.SN_USERNAME }}
             snowPassword: ${{ secrets.SN_PASSWORD }}
             snowSourceInstance: ${{ secrets.SN_INSTANCE }}
             appSysID: ${{ secrets.SN_APP_SYSID }}
