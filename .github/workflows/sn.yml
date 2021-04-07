@@ -29,8 +29,8 @@ jobs:
           id: publish_app
           uses: ServiceNow/sncicd-publish-app@1.0.0
           with:
-            versionTemplate: 1.1
-            versionFormat: template
+            version: 4.2.7
+            versionFormat: exact
           env:
             snowUsername: ${{ secrets.SN_USERNAME }}
             snowPassword: ${{ secrets.SN_PASSWORD }}
@@ -45,18 +45,18 @@ jobs:
         outputs:
             publishversion: ${{ steps.publish_app.outputs.newVersion }}
 
-    deployprod:
+    test:
     # Purpose of this job is to Install App to a Prod instance. This should only 
     # trigger if the feature branch has been merged to master after a successfully 
     # completed pull request, hence the conditional for push to master. In other words,
     # the first two jobs run on CI, then all three jobs run on CD. 
-        name: Deploy to Prod
+        name: Test Installation
         runs-on: ubuntu-latest
-        if: ${{ github.event_name == 'push' }}
+        needs: build
     
         steps:
             - name: ServiceNow CI/CD Install App
-              id: install_app_prod
+              id: install_app
               uses: ServiceNow/sncicd-install-app@1.0.0
               with:
                 version: ${{ needs.build.outputs.publishversion }}
@@ -66,6 +66,26 @@ jobs:
                 snowInstallInstance: ${{ secrets.SN_INSTANCE }}
                 appSysID: ${{ secrets.SN_APP_SYSID }}
                 appScope: ${{ secrets.SN_APP_SCOPE }}
+
+    deploy:
+    # Purpose of this job is to Install App to a Prod instance. This should only 
+    # trigger if the feature branch has been merged to master after a successfully 
+    # completed pull request, hence the conditional for push to master. In other words,
+    # the first two jobs run on CI, then all three jobs run on CD. 
+        name: rollback installation
+        runs-on: ubuntu-latest
+        needs: test
+    
+        steps:
+          - name: ServiceNow CI/CD Rollback App
+            uses: ServiceNow/sncicd-rollback-app@1.0.0
+            with:
+              version: ${{steps.install_app.outputs.rollbackVersion}}
+            env:
+              snowUsername: ${{ secrets.SN_USERNAME }}
+              snowPassword: ${{ secrets.SN_PASSWORD }}
+              snowInstallInstance: ${{ secrets.SN_INSTANCE }}
+              appSysID: ${{ secrets.SN_APP_SYSID }}
 
             
 
