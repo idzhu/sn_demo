@@ -19,7 +19,7 @@ jobs:
         # Purpose of this job is to Apply Remote Changes for the branch triggering 
         # the pipeline build to the Dev instance, then publish the application to 
         # app repo using the template versioning format. 
-        name: Publish from Dev
+        name: Publish App
         runs-on: ubuntu-latest
 
         # Below line can be used to set conditionals for modifying your pipeline as needed.
@@ -34,7 +34,7 @@ jobs:
           env:
             snowUsername: ${{ secrets.SN_USERNAME }}
             snowPassword: ${{ secrets.SN_PASSWORD }}
-            snowSourceInstance: ${{ secrets.SN_INSTANCE }}
+            snowSourceInstance: ${{ secrets.SN_AUTHOR_INSTANCE }}
             appSysID: ${{ secrets.SN_APP_SYSID }}
             appScope: ${{ secrets.SN_APP_SCOPE }}
 
@@ -50,7 +50,7 @@ jobs:
     # trigger if the feature branch has been merged to master after a successfully 
     # completed pull request, hence the conditional for push to master. In other words,
     # the first two jobs run on CI, then all three jobs run on CD. 
-        name: Test Installation
+        name: Install App
         runs-on: ubuntu-latest
         needs: build
     
@@ -63,16 +63,33 @@ jobs:
               env:
                 snowUsername: ${{ secrets.SN_USERNAME }}
                 snowPassword: ${{ secrets.SN_PASSWORD }}
-                snowInstallInstance: ${{ secrets.SN_INSTANCE }}
+                snowInstallInstance: ${{ secrets.SN_CLIENT_INSTANCE }}
                 appSysID: ${{ secrets.SN_APP_SYSID }}
                 appScope: ${{ secrets.SN_APP_SCOPE }}
-
+        steps:
+            # To use this repository's private action,
+            # you must check out the repository
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Install_preview_updates
+              uses: ./.github/actions/install
+              id: install
+              with:
+                version: ${{ needs.build.outputs.publishversion }}
+              env:
+                snowUsername: ${{ secrets.SN_USERNAME }}
+                snowPassword: ${{ secrets.SN_PASSWORD }}
+                snowInstallInstance: ${{ secrets.SN_CLIENT_INSTANCE }}
+                appSysID: ${{ secrets.SN_APP_SYSID }}
+                appScope: ${{ secrets.SN_APP_SCOPE }}
+                baseAppVersion: ${{ secrets.SN_BASE_APP_VERSION }}
+                autoUpgradeBaseApp: ${{ secrets.SN_AUTO_UPGRADE_BASE_APP }}
     deploy:
     # Purpose of this job is to Install App to a Prod instance. This should only 
     # trigger if the feature branch has been merged to master after a successfully 
     # completed pull request, hence the conditional for push to master. In other words,
     # the first two jobs run on CI, then all three jobs run on CD. 
-        name: rollback installation
+        name: Rollback installation
         runs-on: ubuntu-latest
         needs: test
     
@@ -84,7 +101,7 @@ jobs:
             env:
               snowUsername: ${{ secrets.SN_USERNAME }}
               snowPassword: ${{ secrets.SN_PASSWORD }}
-              snowInstallInstance: ${{ secrets.SN_INSTANCE }}
+              snowInstallInstance: ${{ secrets.SN_CLIENT_INSTANCE }}
               appSysID: ${{ secrets.SN_APP_SYSID }}
 
             
