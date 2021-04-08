@@ -55,18 +55,6 @@ jobs:
         needs: build
     
         steps:
-            - name: ServiceNow CI/CD Install App
-              id: install_app
-              uses: ServiceNow/sncicd-install-app@1.0.0
-              with:
-                version: ${{ needs.build.outputs.publishversion }}
-              env:
-                snowUsername: ${{ secrets.SN_USERNAME }}
-                snowPassword: ${{ secrets.SN_PASSWORD }}
-                snowInstallInstance: ${{ secrets.SN_CLIENT_INSTANCE }}
-                appSysID: ${{ secrets.SN_APP_SYSID }}
-                appScope: ${{ secrets.SN_APP_SCOPE }}
-        steps:
             # To use this repository's private action,
             # you must check out the repository
             - name: Checkout
