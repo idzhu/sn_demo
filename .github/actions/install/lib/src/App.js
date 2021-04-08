@@ -106,7 +106,6 @@ class App {
         try {
             const options = this.prepareRequestOptions();
             const url = this.buildRequestUrl(options);
-            console.log("url=", url);
             const response = await axios_1.default.post(url, {}, this.config);
             await this.printStatus(response.data.result);
         }
