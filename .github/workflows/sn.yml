@@ -63,7 +63,7 @@ jobs:
               uses: ./.github/actions/install
               id: install
               with:
-                version: ${{ needs.publish_app.outputs.publishversion }}
+                version: ${{ steps.publish_app.outputs.newVersion }}
               env:
                 snowUsername: ${{ secrets.SN_USERNAME }}
                 snowPassword: ${{ secrets.SN_PASSWORD }}
