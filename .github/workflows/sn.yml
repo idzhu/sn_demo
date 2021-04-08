@@ -43,7 +43,7 @@ jobs:
             # run on different Linux instances, so without this Install App won't know
             # what to install.
         outputs:
-            publishversion: ${{ steps.build.outputs.newVersion }}
+            publishversion: ${{ steps.publish_app.outputs.newVersion }}
 
     test:
     # Purpose of this job is to Install App to a Prod instance. This should only 
@@ -63,7 +63,7 @@ jobs:
               uses: ./.github/actions/install
               id: install
               with:
-                version: ${{ needs.build.outputs.publishversion }}
+                version: ${{ needs.publish_app.outputs.publishversion }}
               env:
                 snowUsername: ${{ secrets.SN_USERNAME }}
                 snowPassword: ${{ secrets.SN_PASSWORD }}
