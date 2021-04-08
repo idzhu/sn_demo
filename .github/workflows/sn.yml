@@ -43,7 +43,7 @@ jobs:
             # run on different Linux instances, so without this Install App won't know
             # what to install.
         outputs:
-            publishversion: ${{ steps.publish_app.outputs.newVersion }}
+            publishversion: ${{ steps.build.outputs.newVersion }}
 
     test:
     # Purpose of this job is to Install App to a Prod instance. This should only 
