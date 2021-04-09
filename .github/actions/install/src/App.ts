@@ -87,10 +87,13 @@ export default class App {
         }
         const options: requestOptions = {
             ...params,
+            ...(this.props.baseAppVersion && {base_app_version: this.props.baseAppVersion}),
             version,
         }
-        options.auto_upgrade_base_app = this.props.autoUpgradeBaseApp;
-        options.base_app_version = this.props.baseAppVersion;
+
+        if (this.props.autoUpgradeBaseApp === true || this.props.autoUpgradeBaseApp === false) {
+            options.auto_upgrade_base_app = this.props.autoUpgradeBaseApp;
+        }
 
         return options;
     }
