@@ -198,8 +198,7 @@ export default class App {
      * and read in the action.yml file from the input variable
      */
     getInputVersion(): string {
-        // const version: string | undefined = core.getInput('version')
-        const version: string | undefined = "4.2.20"
+        const version: string | undefined = core.getInput('version')
 
         if (!version) throw new Error(Errors.MISSING_VERSION)
         return version
