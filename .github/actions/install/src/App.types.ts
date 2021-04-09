@@ -9,6 +9,7 @@ export interface AppProps extends User {
     scope?: string;
     baseAppVersion?: string
     autoUpgradeBaseApp?: boolean,
+    debug?: boolean,
 }
 export interface Params {
     scope?: string;

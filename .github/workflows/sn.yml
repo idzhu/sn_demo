@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: SN
+name: ServiceNow_Publish+Intstall
 
 # Controls when the action will run.
 on:
@@ -29,7 +29,7 @@ jobs:
           id: publish_app
           uses: ServiceNow/sncicd-publish-app@1.0.0
           with:
-            version: 4.2.19
+            version: 4.2.20
             versionFormat: exact
           env:
             snowUsername: ${{ secrets.SN_USERNAME }}
@@ -73,26 +73,8 @@ jobs:
                 appScope: ${{ secrets.SN_APP_SCOPE }}
                 baseAppVersion: ${{ secrets.SN_BASE_APP_VERSION }}
                 autoUpgradeBaseApp: ${{ secrets.SN_AUTO_UPGRADE_BASE_APP }}
-    deploy:
-    # Purpose of this job is to Install App to a Prod instance. This should only 
-    # trigger if the feature branch has been merged to master after a successfully 
-    # completed pull request, hence the conditional for push to master. In other words,
-    # the first two jobs run on CI, then all three jobs run on CD. 
-        name: Rollback installation
-        runs-on: ubuntu-latest
-        needs: test
+                appDebug: ${{ secrets.SN_DEBUG }}
     
-        steps:
-          - name: ServiceNow CI/CD Rollback App
-            uses: ServiceNow/sncicd-rollback-app@1.0.0
-            with:
-              version: ${{ needs.build.outputs.rollbackVersion}}
-            env:
-              snowUsername: ${{ secrets.SN_USERNAME }}
-              snowPassword: ${{ secrets.SN_PASSWORD }}
-              snowInstallInstance: ${{ secrets.SN_CLIENT_INSTANCE }}
-              appSysID: ${{ secrets.SN_APP_SYSID }}
-              appScope: ${{ secrets.SN_APP_SCOPE }}
 
 
             

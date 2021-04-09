@@ -106,6 +106,10 @@ class App {
         try {
             const options = this.prepareRequestOptions();
             const url = this.buildRequestUrl(options);
+            // Show generated URL in Debug Mode
+            if (this.props.debug) {
+                core.debug(`URL=${url}`);
+            }
             const response = await axios_1.default.post(url, {}, this.config);
             await this.printStatus(response.data.result);
         }

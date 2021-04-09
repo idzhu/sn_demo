@@ -16,6 +16,7 @@ export const run = (): void => {
             appScope = '',
             baseAppVersion,
             autoUpgradeBaseApp,
+            debug = false,
         } = process.env
 
         if (!snowUsername) {
@@ -43,6 +44,7 @@ export const run = (): void => {
                 scope: appScope,
                 baseAppVersion,
                 autoUpgradeBaseApp: (autoUpgradeBaseApp === 'true' || autoUpgradeBaseApp === 'false') ? autoUpgradeBaseApp === 'true' : undefined,
+                debug: (debug === 'true') ? true : false,
             }
             const app = new App(props)
 

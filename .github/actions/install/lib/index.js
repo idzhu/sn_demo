@@ -31,7 +31,7 @@ exports.configMsg = '. Configure Github secrets please';
 const run = () => {
     try {
         const errors = [];
-        const { snowUsername = '', snowPassword = '', snowInstallInstance = '', appSysID = '', appScope = '', baseAppVersion, autoUpgradeBaseApp, } = process.env;
+        const { snowUsername = '', snowPassword = '', snowInstallInstance = '', appSysID = '', appScope = '', baseAppVersion, autoUpgradeBaseApp, debug = false, } = process.env;
         if (!snowUsername) {
             errors.push(App_types_1.Errors.USERNAME);
         }
@@ -56,6 +56,7 @@ const run = () => {
                 scope: appScope,
                 baseAppVersion,
                 autoUpgradeBaseApp: (autoUpgradeBaseApp === 'true' || autoUpgradeBaseApp === 'false') ? autoUpgradeBaseApp === 'true' : undefined,
+                debug: (debug === 'true') ? true : false,
             };
             const app = new App_1.default(props);
             app.installApp().catch(error => {
