@@ -29,7 +29,7 @@ jobs:
           id: publish_app
           uses: ServiceNow/sncicd-publish-app@1.0.0
           with:
-            version: 4.3.5
+            version: 4.3.6
             versionFormat: exact
           env:
             snowUsername: ${{ secrets.SN_USERNAME }}

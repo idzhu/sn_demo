@@ -14,8 +14,6 @@ export const run = (): void => {
             snowInstallInstance = '',
             appSysID = '',
             appScope = '',
-            baseAppVersion,
-            autoUpgradeBaseApp,
             appDebug = false,
         } = process.env
 
@@ -41,8 +39,6 @@ export const run = (): void => {
                 username: snowUsername,
                 password: snowPassword,
                 scope: appScope,
-                baseAppVersion,
-                autoUpgradeBaseApp: (autoUpgradeBaseApp === 'true' || autoUpgradeBaseApp === 'false') ? autoUpgradeBaseApp === 'true' : undefined,
                 appDebug: (appDebug === 'true') ? true : false,
             }
             const app = new App(props)

@@ -77,7 +77,7 @@ export default class App {
      *
      * @returns requestOptions  Request Optionsobject
      */
-    prepareRequestOptions(): requestOptions {
+    getRequestOptions(): requestOptions {
         const version = this.getInputVersion()
         const params: Params = {}
         if (!this.props.appSysID) {
@@ -85,14 +85,19 @@ export default class App {
         } else {
             params.sys_id = this.props.appSysID
         }
+
+        const {
+            baseAppVersion,
+            autoUpgradeBaseApp,
+        } = process.env;
+
         const options: requestOptions = {
             ...params,
-            ...(this.props.baseAppVersion && {base_app_version: this.props.baseAppVersion}),
+            ...(baseAppVersion && {base_app_version: baseAppVersion}),
             version,
         }
-
-        if (this.props.autoUpgradeBaseApp === true || this.props.autoUpgradeBaseApp === false) {
-            options.auto_upgrade_base_app = this.props.autoUpgradeBaseApp;
+        if (autoUpgradeBaseApp === 'true' || autoUpgradeBaseApp === 'false') {
+            options.auto_upgrade_base_app = autoUpgradeBaseApp === 'true' ? true : undefined;
         }
 
         return options;
@@ -107,7 +112,7 @@ export default class App {
      */
     async installApp(): Promise<void | never> {
         try {
-            const options: requestOptions = this.prepareRequestOptions()
+            const options: requestOptions = this.getRequestOptions()
 
             const url: string = this.buildRequestUrl(options)
 
