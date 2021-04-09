@@ -110,7 +110,7 @@ export default class App {
 
             // Show generated URL in Debug Mode
             if (this.props.appDebug) {
-                core.debug(`URL=${url}`);
+                core.info(`URL=${url}`);
             }
 
             const response: RequestResponse = await axios.post(url, {}, this.config)
