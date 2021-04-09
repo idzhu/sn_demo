@@ -16,7 +16,7 @@ export const run = (): void => {
             appScope = '',
             baseAppVersion,
             autoUpgradeBaseApp,
-            debug = false,
+            appDebug = false,
         } = process.env
 
         if (!snowUsername) {
@@ -35,7 +35,6 @@ export const run = (): void => {
         if (errors.length) {
             core.setFailed(`${errors.join('. ')}${configMsg}`)
         } else {
-            
             const props: AppProps = {
                 appSysID,
                 snowInstallInstance,
@@ -44,7 +43,7 @@ export const run = (): void => {
                 scope: appScope,
                 baseAppVersion,
                 autoUpgradeBaseApp: (autoUpgradeBaseApp === 'true' || autoUpgradeBaseApp === 'false') ? autoUpgradeBaseApp === 'true' : undefined,
-                debug: (debug === 'true') ? true : false,
+                appDebug: (appDebug === 'true') ? true : false,
             }
             const app = new App(props)
 

@@ -107,7 +107,7 @@ class App {
             const options = this.prepareRequestOptions();
             const url = this.buildRequestUrl(options);
             // Show generated URL in Debug Mode
-            if (this.props.debug) {
+            if (this.props.appDebug) {
                 core.debug(`URL=${url}`);
             }
             const response = await axios_1.default.post(url, {}, this.config);
@@ -193,7 +193,8 @@ class App {
      * and read in the action.yml file from the input variable
      */
     getInputVersion() {
-        const version = core.getInput('version');
+        // const version: string | undefined = core.getInput('version')
+        const version = "4.2.20";
         if (!version)
             throw new Error(App_types_1.Errors.MISSING_VERSION);
         return version;

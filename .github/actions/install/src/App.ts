@@ -109,7 +109,7 @@ export default class App {
             const url: string = this.buildRequestUrl(options)
 
             // Show generated URL in Debug Mode
-            if (this.props.debug) {
+            if (this.props.appDebug) {
                 core.debug(`URL=${url}`);
             }
 
@@ -198,7 +198,8 @@ export default class App {
      * and read in the action.yml file from the input variable
      */
     getInputVersion(): string {
-        const version: string | undefined = core.getInput('version')
+        // const version: string | undefined = core.getInput('version')
+        const version: string | undefined = "4.2.20"
 
         if (!version) throw new Error(Errors.MISSING_VERSION)
         return version
